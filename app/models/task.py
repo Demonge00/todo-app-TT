@@ -40,3 +40,11 @@ class Task(Base):
         if value and len(value) > 5000:
             raise ValueError("Descripción demasiado larga")
         return value
+
+    @validates("estado")
+    def validate_estado(self, key, value):
+        """Valida el estado de la tarea"""
+        estados_validos = {"pendiente", "completada"}
+        if value not in estados_validos:
+            raise ValueError(f"Estado inválido. Valores permitidos: {estados_validos}")
+        return value

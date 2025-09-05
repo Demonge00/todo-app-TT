@@ -4,7 +4,7 @@ from typing import Optional
 from uuid import UUID
 from datetime import datetime
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 # Esto es para futura escalavilidad
@@ -39,10 +39,6 @@ class TaskOut(TaskBase):
     """Esquema para la salida de una tarea."""
 
     id: UUID
-    id_usuario: UUID
-    created_at: datetime
-
-    class Config:
-        """Configuracion"""
-
-        orm_mode = True
+    id_usuario: int
+    fecha_creacion: datetime
+    model_config = ConfigDict(from_attributes=True)

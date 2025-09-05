@@ -19,8 +19,8 @@ router = APIRouter(tags=["tasks"])
 async def create_task(db: AsyncSession, task_in: TaskCreate, user: User) -> Task:
     """Crea una nueva tarea para el usuario dado."""
     task = Task(
-        title=task_in.titulo,
-        description=task_in.descripcion,
+        titulo=task_in.titulo,
+        descripcion=task_in.descripcion,
         estado=task_in.estado.value if task_in.estado is not None else None,
         id_usuario=user.id,
     )
@@ -32,7 +32,7 @@ async def create_task(db: AsyncSession, task_in: TaskCreate, user: User) -> Task
     except SQLAlchemyError as e:
         await db.rollback()
         raise HTTPException(
-            status_code=400, detail=f"No se pudo crear la tarea: {str(e)}"
+            status_code=400, detail=f"No fue posible crear la tarea: {str(e)}"
         ) from e
 
 
@@ -59,7 +59,7 @@ async def update_task(db: AsyncSession, task: Task, task_in: TaskUpdate) -> Task
     except SQLAlchemyError as e:
         await db.rollback()
         raise HTTPException(
-            status_code=400, detail=f"No se pudo actualizar la tarea: {str(e)}"
+            status_code=400, detail=f"No fue posible actualizar la tarea: {str(e)}"
         ) from e
 
 
@@ -71,7 +71,7 @@ async def delete_task(db: AsyncSession, task: Task) -> None:
     except SQLAlchemyError as e:
         await db.rollback()
         raise HTTPException(
-            status_code=400, detail=f"No se pudo borrar la tarea: {str(e)}"
+            status_code=400, detail=f"No fue posible borrar la tarea: {str(e)}"
         ) from e
 
 

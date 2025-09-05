@@ -14,5 +14,19 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  web:
+    build: .
+    container_name: todo_app
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql+asyncpg://todo_user:todo_password@db:5432/todo_db
+      ALEMBIC_DATABASE_URL: postgresql+psycopg2://todo_user:todo_password@db:5432/todo_db
+
 volumes:
   pgdata:

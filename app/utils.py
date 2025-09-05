@@ -1,6 +1,6 @@
 import os
 from passlib.context import CryptContext
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 import jwt
 from fastapi import Depends, HTTPException, status
@@ -14,7 +14,7 @@ from app.database import async_session
 
 load_dotenv()
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = "8c47dc98274957f7954bb7ccd97b5fee"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
 
@@ -36,7 +36,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     """Genera un token JWT."""
     to_encode = data.copy()
-    expire = datetime.utcnow() + (
+    expire = datetime.now(timezone.utc) + (
         expires_delta
         if expires_delta
         else timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -52,7 +52,7 @@ async def get_current_user(
     """Obtiene el usuario actual a partir del token JWT."""
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        id_usuario: str = payload.get("id_usuario ")
+        id_usuario: int = int(payload.get("id_usuario"))
         if id_usuario is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -62,7 +62,7 @@ async def get_current_user(
     except jwt.PyJWTError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="No se pudo validar las credenciales",
+            detail="No se pudieron validar las credenciales",
             headers={"WWW-Authenticate": "Bearer"},
         ) from exc
 

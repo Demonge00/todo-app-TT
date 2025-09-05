@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql+asyncpg://todo_user:todo_password@localhost:5432/todo_db",
+    "postgresql+asyncpg://todo_user:todo_password@db:5432/todo_db",
 )
 
 engine = create_async_engine(DATABASE_URL, echo=True)

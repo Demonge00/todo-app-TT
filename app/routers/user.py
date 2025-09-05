@@ -35,16 +35,22 @@ async def create_user(user: UserCreate, db: AsyncSession = Depends(async_session
             status_code=status.HTTP_400_BAD_REQUEST, detail="Email ya registrado"
         )
     new_user = User(email=user.email, password_hash=hash_password(user.password))
-    db.add(new_user)
-    await db.commit()
-    await db.refresh(new_user)
-    return new_user
+    try:
+        db.add(new_user)
+        await db.commit()
+        await db.refresh(new_user)
+        return new_user
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(
+            status_code=400, detail=f"No se pudo crear la tarea: {str(e)}"
+        ) from e
 
 
 # --------------------------
 # Login / obtener JWT
 # --------------------------
-@router.post("/login")
+@router.post("/login/")
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(async_session),

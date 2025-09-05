@@ -1,8 +1,7 @@
 """Esquemas para la genstión de tareas."""
 
-from uuid import UUID
 from datetime import datetime
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class UserBase(BaseModel):
@@ -20,10 +19,7 @@ class UserCreate(UserBase):
 class UserOut(UserBase):
     """Esquema para la salida de un usuario."""
 
-    id: UUID
-    created_at: datetime
+    id: int
+    fecha_creacion: datetime
 
-    class Config:
-        """Configuracion"""
-
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
