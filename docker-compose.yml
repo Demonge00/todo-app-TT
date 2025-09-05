@@ -17,7 +17,7 @@ services:
   web:
     build: .
     container_name: todo_app
-    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    command: sh ./wait-for-postgres.sh db sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
     volumes:
       - .:/app
     ports:
