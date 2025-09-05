@@ -14,7 +14,7 @@ from app.database import async_session
 
 load_dotenv()
 
-SECRET_KEY = "8c47dc98274957f7954bb7ccd97b5fee"
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
 
